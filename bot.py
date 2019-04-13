@@ -55,7 +55,7 @@ async def on_guild_remove(guild):
 async def on_message(message):
 # DISPLAY LIST OF USABLE COMMANDS
     if message.content.lower() == 'zebot help':
-        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}')
+        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
 
 # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == 'zebot guilds':
