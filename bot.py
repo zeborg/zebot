@@ -13,7 +13,7 @@ import os
 from random import randint as dice
 from datetime import datetime
 
-discord.Game(name="GitHub/zeborg")
+discord.Game(name="GitHub/zeborg", type="Playing")
 
 # THE TOKEN IS HOSTED AS AN ENVIRONMENT VARIABLE
 token = os.environ.get('BOT_TOKEN')
