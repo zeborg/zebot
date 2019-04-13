@@ -13,7 +13,7 @@ token = read_token()
 '''
 
 # HERE, THE TOKEN IS HOSTED AS AN ENVIRONMENT VARIABLE
-token = os.environ.get(BOT_TOKEN)
+token = os.environ.get('BOT_TOKEN')
 
 client = discord.Client()
 
