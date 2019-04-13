@@ -1,18 +1,21 @@
+'''
+
+zebot v0.1 [Discord BOT by zeborg]
+
+GitHub/zeborg
+
+OAuth2 : https://discordapp.com/oauth2/authorize?client_id=565886681165594624&permissions=2080619729&scope=bot
+
+'''
+
 import discord
 import os
 from random import randint as dice
 from datetime import datetime
 
-# IF THE TOKEN IS HOSTED ON THE SAME DIRECTORY AS BOT.PY IN A SINGLE LINE IN "TOKEN.TXT" FILE
-'''def read_token():
-    with open('token.txt', 'r') as f:
-        lines = f.readlines()
-        return lines[0].strip()
+discord.Game(name="GitHub/zeborg")
 
-token = read_token()
-'''
-
-# HERE, THE TOKEN IS HOSTED AS AN ENVIRONMENT VARIABLE
+# THE TOKEN IS HOSTED AS AN ENVIRONMENT VARIABLE
 token = os.environ.get('BOT_TOKEN')
 
 client = discord.Client()
@@ -20,10 +23,10 @@ client = discord.Client()
 server_start_date = datetime.now().strftime("%x")
 server_start_time = datetime.now().strftime("%X")
 
+
 @client.event
 async def on_ready():
-    print('\nDiscord WebSocket latency:', client.latency)
-    print('\nConnected to ' + str(len(client.guilds)) + f' servers during recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} IST.')
+    print('\nConnected to ' + str(len(client.guilds)) + f' servers after recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} IST.')
     for i in range(len(client.guilds)): print(f'{i+1}. {client.guilds[i]} | ID: {client.guilds[i].id} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}')
     print('')
 
