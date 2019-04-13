@@ -13,7 +13,6 @@ import os
 from random import randint as dice
 from datetime import datetime
 
-discord.Game(name="GitHub/zeborg", type="Playing")
 
 # THE TOKEN IS HOSTED AS AN ENVIRONMENT VARIABLE
 token = os.environ.get('BOT_TOKEN')
@@ -26,6 +25,7 @@ server_start_time = datetime.now().strftime("%X")
 
 @client.event
 async def on_ready():
+    client.change_presence(discord.Game(name="GitHub/zeborg | zebot help"))
     print('\nConnected to ' + str(len(client.guilds)) + f' servers after recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} IST.')
     for i in range(len(client.guilds)): print(f'{i+1}. {client.guilds[i]} | ID: {client.guilds[i].id} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}')
     print('')
@@ -55,7 +55,7 @@ async def on_guild_remove(guild):
 async def on_message(message):
 # DISPLAY LIST OF USABLE COMMANDS
     if message.content.lower() == ('zebot help'):
-        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} IST`\n\n` ``greet <@User>` : greet someone by mentioning them; greets you if no one is mentioned\n` ``rtd ` : rolls a die\n` ``cguilds ` :  lists servers currently running {client.user.mention}')
+        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} IST`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot cguilds ` :  lists servers currently running {client.user.mention}')
 
 # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == 'zebot guilds':
