@@ -26,7 +26,7 @@ server_start_time = datetime.now().strftime("%X")
 @client.event
 async def on_ready():
     await client.change_presence(activity=discord.Game(name="GitHub/zeborg | zebot help"))
-    print('\nConnected to ' + str(len(client.guilds)) + f' servers after recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} IST.')
+    print('\nConnected to ' + str(len(client.guilds)) + f' servers after recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC.')
     for i in range(len(client.guilds)): print(f'{i+1}. {client.guilds[i]} | ID: {client.guilds[i].id} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}')
     print('')
 
@@ -54,20 +54,20 @@ async def on_guild_remove(guild):
 @client.event
 async def on_message(message):
 # DISPLAY LIST OF USABLE COMMANDS
-    if message.content.lower() == ('zebot help'):
-        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} IST`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}')
+    if message.content.lower() == 'zebot help':
+        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}')
 
 # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == 'zebot guilds':
         conn_guilds_list=""
         for i in range(len(client.guilds)): conn_guilds_list=conn_guilds_list+(f'{i+1}. {client.guilds[i]} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}\n')
-        await message.channel.send(f'Currently connected to **{len(client.guilds)}** servers at `{datetime.now().strftime("%x")} {datetime.now().strftime("%X")} IST`\n\n```javascript\n{conn_guilds_list}```')
+        await message.channel.send(f'Currently connected to **{len(client.guilds)}** servers at `{datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC`\n\n```javascript\n{conn_guilds_list}```')
 
 # LOGGING TEXTS FROM CONNECTED GUILDS
     logging_server = discord.utils.get(client.guilds, name='zebot dev')
     channel_log_server = discord.utils.get(logging_server.text_channels, name='server-logs')
     if message.author != client.user:
-        await channel_log_server.send((f'**{message.author}** logged text (*{datetime.now().strftime("%x")} {datetime.now().strftime("%X")} IST*) in **{message.author.guild}** `#{message.channel}`:\n```{message.content}```'))
+        await channel_log_server.send((f'**{message.author}** logged text (*{datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC*) in **{message.author.guild}** `#{message.channel}`:\n```{message.content}```'))
 
 # GREET A USER
     if message.content.startswith('zebot greet') and '@everyone' in message.content: await message.channel.send(f':bouquet: Hey **everyone**! Greetings from {message.author.mention} :bouquet:')
