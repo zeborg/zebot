@@ -1,6 +1,6 @@
 '''
 
-zebot v0.1a [Discord BOT by zeborg]
+zebot v0.1b [Discord BOT by zeborg]
 
 GitHub/zeborg  |  Discord: zeborg#4589
 
@@ -38,7 +38,7 @@ async def on_guild_join(guild):
     logging_server = discord.utils.get(client.guilds, name='zebot dev')
     channel_log_console = discord.utils.get(logging_server.text_channels, name='console-logs')
 
-    await channel_log_console.send(f'**CONNECTED** : ` {guild.name} ` | **ID** : ` {guild.id} ` | **OWNER** : ` {guild.owner} | **MEMBERS** : {len(guild.members)} `')
+    await channel_log_console.send(f'**CONNECTED** : ` {guild.name} ` | **ID** : ` {guild.id} ` | **OWNER** : ` {guild.owner} ` | **MEMBERS** : ` {len(guild.members)} `')
     print(f'CONNECTED : {guild.name} | ID : {guild.id} | OWNER : {guild.owner}')
 
 
@@ -62,11 +62,26 @@ async def on_message(message):
         if len(given_message.attachments) == 1: return given_message.attachments[0].url
         else: return 'None'
 
+    def get_server_roles_list():
+        ''' RETURNS AN ARRAY OF ALL THE ROLES PRESENT IN THE GUILD EXCEPT THE '@everyone' ROLE
+            INDICES :  0 => NAME  //  1 => ROLE COLOUR OBJECT  //  2 => ROLE ID  //  3 => NO. OF MEMBERS WITH THAT ROLE
+        '''
+        server_roles_list = []
+        for i in message.guild.roles:
+            if i.name != '@everyone':
+                temp = []
+                temp.append(i.name)
+                temp.append(discord.Colour.to_rgb(i.color))
+                temp.append(i.id)
+                temp.append(len(i.members))
+                server_roles_list.append(temp)
+        return server_roles_list
+
 # VARIABLE TO STORE MESSAGE CONTENT FOR LOGGING
     display_message_content = f'```{message.content}```' if len(message.content) > 0 else '`No content`'
 
 # DISPLAY LIST OF USABLE COMMANDS
-    if message.content.lower() == 'zebot help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@user1> <@user2> ... ` : greet people by mentioning them\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n`zebot slap <@user1> <@user2> ...` : hurt others\' emotions\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
+    if message.content.lower() == 'zebot help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@user1> <@user2> ... ` : greet people by mentioning them\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n`zebot slap <@user1> <@user2> ...` : hurt others\' emotions\n`zebot server roles` : list of server roles with their (r,g,b) values\n`zeborg role members` : list of members in each role of the server\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
 
 # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == 'zebot guilds':
@@ -102,5 +117,21 @@ async def on_message(message):
             await message.channel.send(f':clap: {message.author.mention} just slapped {multi_slap_mentions}! :clap: GET REKT KIDS! :nerd:')
         elif len(message.mentions) == 1: await message.channel.send(f':clap: {message.author.mention} just slapped {message.mentions[0].mention}! :clap: GET REKT KID! :nerd: ')
         elif len(message.mentions) == 0: await message.channel.send(f':clap: {message.author.mention} just slapped themself! :clap: Make sure you mention someone to avoid slapping yourself. :robot:')
+
+# LIST ROLES IN GUILD
+    if message.content.lower() == 'zebot server roles':
+        role_str = ''
+        for role in get_server_roles_list():
+            role_str = f'Name: `{role[0]}` // Colour: `{role[1]}`' if get_server_roles_list().index(role) == 0 else role_str + f'\nName: `{role[0]}` // Colour: `{role[1]}`'
+
+        await message.channel.send(f'**__Server roles with (R,G,B) values__**:\n\n{role_str}')
+
+# NO. OF MEMBERS IN EVERY ROLE
+    if message.content.lower() == 'zebot role members':
+        role_num_str = ''
+        for i in get_server_roles_list():
+            role_num_str = f'`{i[0]}` : {i[3]} members' if get_server_roles_list().index(i) == 0 else role_num_str + f'\n`{i[0]}` : {i[3]} members'
+
+        await message.channel.send(f'**__No. of members in every role__**:\n\n{role_num_str}')
 
 client.run(token)
