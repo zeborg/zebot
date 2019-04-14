@@ -81,7 +81,7 @@ async def on_message(message):
     display_message_content = f'```{message.content}```' if len(message.content) > 0 else '`No content`'
 
 # DISPLAY LIST OF USABLE COMMANDS
-    if message.content.lower() == 'zebot help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@user1> <@user2> ... ` : greet people by mentioning them\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n`zebot slap <@user1> <@user2> ...` : hurt others\' emotions\n`zebot server roles` : list of server roles with their (r,g,b) values\n`zeborg role members` : list of members in each role of the server\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
+    if message.content.lower() == 'zebot help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@user1> <@user2> ... ` : greet people by mentioning them\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n`zebot slap <@user1> <@user2> ...` : hurt others\' emotions\n`zebot server roles` : list of server roles with their (r,g,b) values\n`zeborg role members` : number of members in each role of the server\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
 
 # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == 'zebot guilds':
