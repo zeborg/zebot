@@ -15,5 +15,6 @@ A simple Discord BOT which is still under development.
   - date and time of messaging
   - attachment url (if any)
   - text content of message
+- logs the joining/removal of zebot to/from servers
 
 #### If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589`
