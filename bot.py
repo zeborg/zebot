@@ -1,12 +1,16 @@
 '''
-zebot v0.1 [Discord BOT by zeborg]
-GitHub/zeborg
+
+zebot v0.1a [Discord BOT by zeborg]
+
+GitHub/zeborg  |  Discord: zeborg#4589
+
 OAuth2 : https://discordapp.com/oauth2/authorize?client_id=565886681165594624&permissions=2080619729&scope=bot
+
 '''
 
 import discord
 import os
-from random import randint as dice
+from random import randint as die
 from datetime import datetime
 
 
@@ -28,8 +32,9 @@ async def on_ready():
 
 
 @client.event
-# LOGGING GUILD CONNECTION
 async def on_guild_join(guild):
+    ''' LOGGING GUILD CONNECTION '''
+
     logging_server = discord.utils.get(client.guilds, name='zebot dev')
     channel_log_console = discord.utils.get(logging_server.text_channels, name='console-logs')
 
@@ -38,8 +43,9 @@ async def on_guild_join(guild):
 
 
 @client.event
-# LOGGING GUILD DISCONNECTION
 async def on_guild_remove(guild):
+    ''' LOGGING GUILD DISCONNECTION '''
+
     logging_server = discord.utils.get(client.guilds, name='zebot dev')
     channel_log_console = discord.utils.get(logging_server.text_channels, name='console-logs')
 
@@ -49,9 +55,18 @@ async def on_guild_remove(guild):
 
 @client.event
 async def on_message(message):
+    ''' GUILD TEXT MESSAGE RESPONSES '''
+
+    def get_attached_file_url(given_message):
+        ''' FETCH URL OF ATTACHED FILE IN A MESSAGE  '''
+        if len(given_message.attachments) == 1: return given_message.attachments[0].url
+        else: return 'None'
+
+# VARIABLE TO STORE MESSAGE CONTENT FOR LOGGING
+    display_message_content = f'```{message.content}```' if len(message.content) > 0 else '`No content`'
+
 # DISPLAY LIST OF USABLE COMMANDS
-    if message.content.lower() == 'zebot help':
-        await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
+    if message.content.lower() == 'zebot help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@User1> <@User2> ... ` : greet people by mentioning them; greets you if no one is mentioned\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
 
 # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == 'zebot guilds':
@@ -62,8 +77,7 @@ async def on_message(message):
 # LOGGING TEXTS FROM CONNECTED GUILDS
     logging_server = discord.utils.get(client.guilds, name='zebot dev')
     channel_log_server = discord.utils.get(logging_server.text_channels, name='server-logs')
-    if message.author != client.user:
-        await channel_log_server.send((f'**{message.author}** logged text (*{datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC*) in **{message.author.guild}** `#{message.channel}`:\n```{message.content}```'))
+    if message.author != client.user: await channel_log_server.send((f'**{message.author}** logged text (*{datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC*) in **{message.author.guild}** `#{message.channel}`:\n\nAttachment: `{get_attached_file_url(message)}`\n\nContent: {display_message_content}'))
 
 # GREET A USER
     if message.content.startswith('zebot greet') and '@everyone' in message.content: await message.channel.send(f':bouquet: Hey **everyone**! Greetings from {message.author.mention} :bouquet:')
@@ -77,7 +91,7 @@ async def on_message(message):
 
 # ROLL THE DIE
     if message.content.lower() == 'zebot rtd':
-        await message.channel.send(f':game_die: **{message.author.display_name}** just rolled **{dice(1, 6)}** :game_die:')
+        await message.channel.send(f':game_die: **{message.author.display_name}** just rolled **{die(1, 6)}** :game_die:')
 
 # SLAP
     if message.content.startswith('zebot slap'):
