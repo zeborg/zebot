@@ -8,6 +8,8 @@ A simple Discord BOT which is still under development.
 - `zebot greet <@user1> <@user2> ...` : greet people by mentioning them
 - `zebot rtd` : roll a die
 - `zebot slap <@user1> <@user2> ...` : I wonder what this does... maybe I'll try it on myself
+- `zebot server roles` : list of server roles with their (r,g,b) values
+- `zebot role members` : number of members in each role of the server
 
 ### INTERNAL FEATURES (till now)
 - logs the messages of joined servers into the zebot dev server. message information contains:
