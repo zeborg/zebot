@@ -1,6 +1,6 @@
 '''
 
-zebot v0.2a [Discord BOT by zeborg]
+zebot v0.2b [Discord BOT by zeborg]
 
 GitHub/zeborg  |  Discord: zeborg#4589
 
@@ -204,33 +204,27 @@ async def on_message(message):
 
     # TEXT CHANNELS IN THE GUILD
     if message.guild != None:
-        if message.content.lower() == f'{b_t} userinfo':
-            user_embed = discord.Embed(title = f'{message.author.name}\'s User Information', colour = message.author.color)
-            user_embed.set_thumbnail(url = f'{message.author.avatar_url}')
-            user_embed.add_field(name = 'Username', value = f'{message.author.name}')
-            user_embed.add_field(name = 'Discriminator', value = f'{message.author.discriminator}')
-            user_embed.add_field(name = 'User ID', value = f'{message.author.id}')
-            user_embed.add_field(name = 'Current Status', value = f'{str(message.author.status).upper()}')
-            user_embed.add_field(name = 'Server Nickname', value = f'{message.author.nick}')
-            user_embed.add_field(name = 'Highest Role', value = f'{message.author.top_role}')
-            user_embed.add_field(name = 'Joined Discord', value = f'{message.author.created_at}')
-            user_embed.add_field(name = 'Joined Server', value = f'{message.author.joined_at}')
-            await message.channel.send(embed = user_embed)
-        elif message.content.startswith(f'{b_t} userinfo'):
+        passed = False
+        if message.content.startswith(f'{b_t} userinfo'):
             if len(message.mentions) == 1:
-                user_embed = discord.Embed(title = f'{message.mentions[0].name}\'s User Information', colour = message.mentions[0].color)
-                user_embed.set_thumbnail(url = f'{message.mentions[0].avatar_url}')
-                user_embed.add_field(name = 'Username', value = f'{message.mentions[0].name}')
-                user_embed.add_field(name = 'Discriminator', value = f'{message.mentions[0].discriminator}')
-                user_embed.add_field(name = 'User ID', value = f'{message.mentions[0].id}')
-                user_embed.add_field(name = 'Current Status', value = f'{str(message.mentions[0].status).upper()}')
-                user_embed.add_field(name = 'Server Nickname', value = f'{message.mentions[0].nick}')
-                user_embed.add_field(name = 'Highest Role', value = f'{message.mentions[0].top_role}')
-                user_embed.add_field(name = 'Joined Discord', value = f'{message.mentions[0].created_at}')
-                user_embed.add_field(name = 'Joined Server', value = f'{message.mentions[0].joined_at}')
-                await message.channel.send(embed = user_embed)
-            else:
-                await message.channel.send(f'To view someone\'s userinfo by mentioning them, type `{b_t} userinfo <@user>`\nTo view your own userinfo, type `{b_t} userinfo`')
+                requested_uinfo = message.mentions[0]
+                passed = True
+            elif message.content.lower() == f'{b_t} userinfo':
+                requested_uinfo = message.author
+                passed = True
 
+            if passed:
+                user_embed = discord.Embed(title = f'{requested_uinfo.name}\'s User Information', colour = message.author.color)
+                user_embed.set_thumbnail(url = f'{requested_uinfo.avatar_url}')
+                user_embed.add_field(name = 'Username', value = f'{requested_uinfo.name}')
+                user_embed.add_field(name = 'Discriminator', value = f'{requested_uinfo.discriminator}')
+                user_embed.add_field(name = 'User ID', value = f'{requested_uinfo.id}')
+                user_embed.add_field(name = 'Current Status', value = f'{str(requested_uinfo.status).upper()}')
+                user_embed.add_field(name = 'Server Nickname', value = f'{requested_uinfo.nick}')
+                user_embed.add_field(name = 'Highest Role', value = f'{requested_uinfo.top_role}')
+                user_embed.add_field(name = 'Joined Discord', value = f'{requested_uinfo.created_at}')
+                user_embed.add_field(name = 'Joined Server', value = f'{requested_uinfo.joined_at}')
+                await message.channel.send(embed = user_embed)
+            else: await message.channel.send(f'To view someone\'s userinfo by mentioning them, type `{b_t} userinfo <@user>`\nTo view your own userinfo, type `{b_t} userinfo`')
 
 client.run(token)
