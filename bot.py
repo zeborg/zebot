@@ -202,7 +202,7 @@ async def on_message(message):
             await message.channel.send(embed = ava_embed)
         else: await message.channel.send('To show someone\'s avatar by mentioning them, type `zeb avatar <@User>`\nTo show your own avatar, type `zeb avatar`')
 
-    # TEXT CHANNELS IN THE GUILD
+    # USER INFO
     if message.guild != None:
         if message.content == f'{b_t} userinfo':
             user_embed = discord.Embed(title = f'{message.author.name}\'s User Information', colour = message.author.color)
