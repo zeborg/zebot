@@ -141,8 +141,8 @@ async def on_message(message):
         for k in range(len(message.mentions)): multi_mentions = multi_mentions + message.mentions[k].mention + ', ' if k < len(message.mentions) - 1 else multi_mentions + message.mentions[k].mention
         return multi_mentions
 
-    # DISPLAY LIST OF USABLE COMMANDS
-    if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` {b_t} help ` : lists all the commands available since last update\n` {b_t} greet <@user1> <@user2> ... ` : greet people by mentioning them\n` {b_t} rtd ` : rolls a die\n` {b_t} guilds ` :  lists servers currently running {client.user.mention}\n` {b_t} slap <@user1> <@user2> ... ` : hurt others\' emotions\n` {b_t} server roles ` : info about every role in the server\n ` {b_t} avatar <@user> ` : displays the profile picture of mentioned user\n` {b_t} userinfo <@user> ` : view someone\'s/your userinfo\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589` :thought_balloon:')
+    # COMMANDS LIST
+    if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` {b_t} help ` : lists all the commands available since last update\n` {b_t} greet <@user1> <@user2> ... ` : greet people by mentioning them\n` {b_t} rtd ` : rolls a die\n` {b_t} guilds ` :  lists servers currently running {client.user.mention}\n` {b_t} slap <@user1> <@user2> ... ` : hurt others\' emotions\n` {b_t} server roles ` : info about every role in the server\n` {b_t} avatar <@user> ` : displays the profile picture of mentioned user\n` {b_t} userinfo <@user> ` : view someone\'s/your userinfo\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589` :thought_balloon:')
 
     # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == f'{b_t} guilds':
