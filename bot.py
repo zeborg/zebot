@@ -1,6 +1,6 @@
 '''
 
-zebot v0.2 [Discord BOT by zeborg]
+zebot v0.2a [Discord BOT by zeborg]
 
 GitHub/zeborg  |  Discord: zeborg#4589
 
@@ -142,7 +142,7 @@ async def on_message(message):
         return multi_mentions
 
     # DISPLAY LIST OF USABLE COMMANDS
-    if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` {b_t} help ` : lists all the commands available since last update\n` {b_t} greet <@user1> <@user2> ... ` : greet people by mentioning them\n` {b_t} rtd ` : rolls a die\n` {b_t} guilds ` :  lists servers {client.user.mention} is connected to\n` {b_t} slap <@user1> <@user2> ... ` : hurt others\' emotions\n` {b_t} server roles ` : info about every role in the server\n ` {b_t} avatar <@user> ` : view your/mentioned user\'s profile picture of \n` {b_t} userinfo <@user> ` : view someone\'s/your userinfo\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589` :thought_balloon:')
+    if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` {b_t} help ` : lists all the commands available since last update\n` {b_t} greet <@user1> <@user2> ... ` : greet people by mentioning them\n` {b_t} rtd ` : rolls a die\n` {b_t} guilds ` :  lists servers currently running {client.user.mention}\n` {b_t} slap <@user1> <@user2> ... ` : hurt others\' emotions\n` {b_t} server roles ` : info about every role in the server\n ` {b_t} avatar <@user> ` : displays the profile picture of mentioned user\n` {b_t} userinfo <@user> ` : view someone\'s/your userinfo\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589` :thought_balloon:')
 
     # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == f'{b_t} guilds':
@@ -202,13 +202,15 @@ async def on_message(message):
             await message.channel.send(embed = ava_embed)
         else: await message.channel.send('To show someone\'s avatar by mentioning them, type `zeb avatar <@User>`\nTo show your own avatar, type `zeb avatar`')
 
-    # USER INFO
+    # TEXT CHANNELS IN THE GUILD
     if message.guild != None:
-        if message.content == f'{b_t} userinfo':
+        if message.content.lower() == f'{b_t} userinfo':
             user_embed = discord.Embed(title = f'{message.author.name}\'s User Information', colour = message.author.color)
             user_embed.set_thumbnail(url = f'{message.author.avatar_url}')
             user_embed.add_field(name = 'Username', value = f'{message.author.name}')
             user_embed.add_field(name = 'Discriminator', value = f'{message.author.discriminator}')
+            user_embed.add_field(name = 'User ID', value = f'{message.author.id}')
+            user_embed.add_field(name = 'Current Status', value = f'{str(message.author.status).upper()}')
             user_embed.add_field(name = 'Server Nickname', value = f'{message.author.nick}')
             user_embed.add_field(name = 'Highest Role', value = f'{message.author.top_role}')
             user_embed.add_field(name = 'Joined Discord', value = f'{message.author.created_at}')
@@ -220,6 +222,8 @@ async def on_message(message):
                 user_embed.set_thumbnail(url = f'{message.mentions[0].avatar_url}')
                 user_embed.add_field(name = 'Username', value = f'{message.mentions[0].name}')
                 user_embed.add_field(name = 'Discriminator', value = f'{message.mentions[0].discriminator}')
+                user_embed.add_field(name = 'User ID', value = f'{message.mentions[0].id}')
+                user_embed.add_field(name = 'Current Status', value = f'{str(message.mentions[0].status).upper()}')
                 user_embed.add_field(name = 'Server Nickname', value = f'{message.mentions[0].nick}')
                 user_embed.add_field(name = 'Highest Role', value = f'{message.mentions[0].top_role}')
                 user_embed.add_field(name = 'Joined Discord', value = f'{message.mentions[0].created_at}')
