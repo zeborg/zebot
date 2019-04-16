@@ -3,12 +3,12 @@
 A simple Discord BOT which is still under development.
 
 ### COMMANDS (till now)
-- `zebot help` : list of available commands
-- `zebot guilds` : list of servers with **zebot**
-- `zebot greet <@user1> <@user2> ...` : greet people by mentioning them
-- `zebot rtd` : roll a die
-- `zebot slap <@user1> <@user2> ...` : I wonder what this does... maybe I'll try it on myself
-- `zebot server roles` : info about every role in the server
+- `zeb help` : list of available commands
+- `zeb guilds` : list of servers with **zebot**
+- `zeb greet <@user1> <@user2> ...` : greet people by mentioning them
+- `zeb rtd` : roll a die
+- `zeb slap <@user1> <@user2> ...` : I wonder what this does... maybe I'll try it on myself
+- `zeb server roles` : info about every role in the server
 
 ### INTERNAL FEATURES (till now)
 - logs the messages of joined servers into the 'zebot dev' server. message information contains:
