@@ -50,10 +50,11 @@ async def on_guild_remove(guild):
 async def on_ready():
     ''' CHANGE CLIENT PRESENCE AT BOT START UP, PRINT LIST OF SERVERS CONNECTED DURING START UP IN BOT CONSOLE '''
 
-    await client.change_presence(activity=discord.Game(name="GitHub/zeborg | zebot help"))
+    await client.change_presence(activity=discord.Game(name="GitHub/zeborg | zeb help"))
     print('\nConnected to ' + str(len(client.guilds)) + f' servers after recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC.')
     for i in range(len(client.guilds)): print(f'{i+1}. {client.guilds[i]} | ID: {client.guilds[i].id} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}')
     print('')
+          
 
 @client.event
 async def on_guild_join(guild):
@@ -111,7 +112,7 @@ async def on_message(message):
             return multi_mentions
 
     # DISPLAY LIST OF USABLE COMMANDS
-        if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zebot help ` : lists all the commands available since last update\n` zebot greet <@user1> <@user2> ... ` : greet people by mentioning them\n` zebot rtd ` : rolls a die\n` zebot guilds ` :  lists servers currently running {client.user.mention}\n`zebot slap <@user1> <@user2> ...` : hurt others\' emotions\n`zebot server roles` : info about every role in the server\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
+        if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` zeb help ` : lists all the commands available since last update\n` zeb greet <@user1> <@user2> ... ` : greet people by mentioning them\n` zeb rtd ` : rolls a die\n` zeb guilds ` :  lists servers currently running {client.user.mention}\n`zeb slap <@user1> <@user2> ...` : hurt others\' emotions\n`zeb server roles` : info about every role in the server\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my discord `zeborg#4589` :thought_balloon:')
 
     # DISPLAY CURRENTLY CONNECTED GUILDS
         if message.content.lower() == f'{b_t} guilds':
