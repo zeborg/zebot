@@ -1,6 +1,6 @@
 '''
 
-zebot v0.3 [Discord BOT by zeborg]
+zebot v0.3a [Discord BOT by zeborg]
 
 GitHub/zeborg  |  Discord: zeborg#4589
 
@@ -30,7 +30,7 @@ client = discord.Client()
 server_start_date = datetime.now().strftime("%x")
 server_start_time = datetime.now().strftime("%X")
 
-verinfo = 'zebot v0.3' # ZEBOT CURRENT VERSION
+verinfo = 'zebot v0.3a' # ZEBOT CURRENT VERSION
 b_t = 'zeb' # ZEBOT COMMAND TRIGGER
 
 
@@ -194,7 +194,7 @@ async def on_message(message):
             requested_uinfo = message.author
 
         if passed:
-            ava_embed = discord.Embed(title = f'{requested_uinfo.name}\'s Avatar', url = f'{requested_uinfo.avatar_url}', colour = random_colors())
+            ava_embed = discord.Embed(title = f'{requested_uinfo.name}\'s Avatar', url = f'{requested_uinfo.avatar_url}', colour = requested_uinfo.color)
             ava_embed.set_image(url = f'{requested_uinfo.avatar_url}')
             ava_embed.set_footer(text = f'{verinfo}', icon_url = f'{client.user.avatar_url}')
             ava_embed.set_author(name=f'{message.author} requested:', icon_url=f'{message.author.avatar_url}')
@@ -235,12 +235,8 @@ async def on_message(message):
     if message.content.lower() == 'zeb aninews':
         aninews = feedparser.parse('https://myanimelist.net/rss/news.xml')
 
-        ani_embed = discord.Embed(title = 'Recent Anime News', colour = discord.Colour.purple())
-        ani_embed.add_field(name = f'1. {aninews.entries[0].title}', value = f'{aninews.entries[0].description} [continue]({aninews.entries[0].link})')
-        ani_embed.add_field(name = f'2. {aninews.entries[1].title}', value = f'{aninews.entries[1].description} [continue]({aninews.entries[1].link})')
-        ani_embed.add_field(name = f'3. {aninews.entries[2].title}', value = f'{aninews.entries[2].description} [continue]({aninews.entries[2].link})')
-        ani_embed.add_field(name = f'4. {aninews.entries[3].title}', value = f'{aninews.entries[3].description} [continue]({aninews.entries[3].link})')
-        ani_embed.add_field(name = f'5. {aninews.entries[4].title}', value = f'{aninews.entries[4].description} [continue]({aninews.entries[4].link})')
+        ani_embed = discord.Embed(title = 'Recent Anime News', colour = random_colors(), url = 'https://myanimelist.net/news')
+        for i in range(5): ani_embed.add_field(name = f'{i+1}. {aninews.entries[i].title}', value = f'{aninews.entries[i].description}...[read more]({aninews.entries[i].link})')
         ani_embed.set_footer(text = f'{verinfo}', icon_url = client.user.avatar_url)
         ani_embed.set_author(name=f'{message.author} requested:', icon_url=f'{message.author.avatar_url}')
         ani_embed.set_thumbnail(url = aninews.entries[0]['media_thumbnail'][0]['url'])
