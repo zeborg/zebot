@@ -1,6 +1,6 @@
 '''
 
-zebot v0.2c [Discord BOT by zeborg]
+zebot v0.3 [Discord BOT by zeborg]
 
 GitHub/zeborg  |  Discord: zeborg#4589
 
@@ -9,21 +9,28 @@ OAuth2 : https://discordapp.com/oauth2/authorize?client_id=565886681165594624&pe
 '''
 
 import discord
-import os
+import psycopg2
+from os import environ as envar
 from random import randint as die
 from random import randint as clrs
 from datetime import datetime
+import feedparser
 
 
-# THE TOKEN IS HOSTED AS AN ENVIRONMENT VARIABLE
-token = os.environ.get('BOT_TOKEN')
+# BOT TOKEN
+token = envar.get('BOT_TOKEN')
 
+# DATABASE
+dbhost, dbuser, dbpw, dbdb = envar.get('DB_HOST'), envar.get('DB_USER'), envar.get('DB_PW'), envar.get('DB_DB')
+db = psycopg2.connect(host = dbhost, user = dbuser, password = dbpw, database = dbdb)
+
+# CLIENT ACTIVATION
 client = discord.Client()
 
 server_start_date = datetime.now().strftime("%x")
 server_start_time = datetime.now().strftime("%X")
 
-verinfo = 'zebot v0.2c' # ZEBOT CURRENT VERSION
+verinfo = 'zebot v0.3' # ZEBOT CURRENT VERSION
 b_t = 'zeb' # ZEBOT COMMAND TRIGGER
 
 
@@ -35,6 +42,9 @@ async def on_ready():
     print('\nConnected to ' + str(len(client.guilds)) + f' servers after recent reboot at {datetime.now().strftime("%x")} {datetime.now().strftime("%X")} UTC.')
     for i in range(len(client.guilds)): print(f'{i+1}. {client.guilds[i]} | ID: {client.guilds[i].id} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}')
     print('')
+
+    logging_server = discord.utils.get(client.guilds, name='zebot dev')
+    channel_feed_anime = discord.utils.get(logging_server.text_channels, name='anime-releases')
 
 
 @client.event
@@ -128,7 +138,7 @@ async def on_message(message):
         return multi_mentions
 
     # COMMANDS LIST
-    if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` {b_t} help ` : lists all the commands available since last update\n` {b_t} greet <@user1> <@user2> ... ` : greet people by mentioning them\n` {b_t} rtd ` : rolls a die\n` {b_t} guilds ` :  lists servers currently running {client.user.mention}\n` {b_t} slap <@user1> <@user2> ... ` : hurt others\' emotions\n` {b_t} server roles ` : info about every role in the server\n` {b_t} avatar <@user> ` : displays the profile picture of mentioned user\n` {b_t} userinfo <@user> ` : view someone\'s/your userinfo\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589` :thought_balloon:')
+    if message.content.lower() == f'{b_t} help': await message.channel.send(f'**AVAILABLE COMMANDS** `last updated: {server_start_date} {server_start_time} UTC`\n\n` {b_t} help ` : lists all the commands available since last update\n` {b_t} greet <@user1> <@user2> ... ` : greet people by mentioning them\n` {b_t} rtd ` : rolls a die\n` {b_t} guilds ` :  lists servers currently running {client.user.mention}\n` {b_t} slap <@user1> <@user2> ... ` : hurt others\' emotions\n` {b_t} server roles ` : info about every role in the server\n` {b_t} avatar <@user> ` : displays the profile picture of mentioned user\n` {b_t} userinfo <@user> ` : view someone\'s/your userinfo\n` {b_t} aninews ` : view 5 recent anime news stories\n\n:thought_balloon: If you want to share some ideas regarding this bot, just DM me @ my Discord `zeborg#4589` :thought_balloon:')
 
     # DISPLAY CURRENTLY CONNECTED GUILDS
     if message.content.lower() == f'{b_t} guilds':
@@ -187,6 +197,7 @@ async def on_message(message):
             ava_embed = discord.Embed(title = f'{requested_uinfo.name}\'s Avatar', url = f'{requested_uinfo.avatar_url}', colour = random_colors())
             ava_embed.set_image(url = f'{requested_uinfo.avatar_url}')
             ava_embed.set_footer(text = f'{verinfo}', icon_url = f'{client.user.avatar_url}')
+            ava_embed.set_author(name=f'{message.author} requested:', icon_url=f'{message.author.avatar_url}')
             await message.channel.send(embed = ava_embed)
         else: await message.channel.send('To show someone\'s avatar by mentioning them, type `zeb avatar <@User>`\nTo show your own avatar, type `zeb avatar`')
 
@@ -201,8 +212,11 @@ async def on_message(message):
                 requested_uinfo = message.author
                 passed = True
 
+            if message.author.typing:
+                pass
+
             if passed:
-                user_embed = discord.Embed(title = f'{requested_uinfo.name}\'s User Information', colour = message.author.color)
+                user_embed = discord.Embed(title = f'{requested_uinfo.name}\'s User Information', colour = requested_uinfo.color)
                 user_embed.set_thumbnail(url = f'{requested_uinfo.avatar_url}')
                 user_embed.add_field(name = 'Username', value = f'{requested_uinfo.name}')
                 user_embed.add_field(name = 'Discriminator', value = f'{requested_uinfo.discriminator}')
@@ -213,8 +227,24 @@ async def on_message(message):
                 user_embed.add_field(name = 'Joined Discord', value = f'{requested_uinfo.created_at}')
                 user_embed.add_field(name = 'Joined Server', value = f'{requested_uinfo.joined_at}')
                 user_embed.set_footer(text = f'{verinfo}', icon_url = f'{client.user.avatar_url}')
+                user_embed.set_author(name = f'{message.author} requested:', icon_url=f'{message.author.avatar_url}')
                 await message.channel.send(embed = user_embed)
             else: await message.channel.send(f'To view someone\'s userinfo by mentioning them, type `{b_t} userinfo <@user>`\nTo view your own userinfo, type `{b_t} userinfo`')
+
+    # RECENT ANIME NEWS
+    if message.content.lower() == 'zeb aninews':
+        aninews = feedparser.parse('https://myanimelist.net/rss/news.xml')
+
+        ani_embed = discord.Embed(title = 'Recent Anime News', colour = discord.Colour.purple())
+        ani_embed.add_field(name = f'1. {aninews.entries[0].title}', value = f'{aninews.entries[0].description} [continue]({aninews.entries[0].link})')
+        ani_embed.add_field(name = f'2. {aninews.entries[1].title}', value = f'{aninews.entries[1].description} [continue]({aninews.entries[1].link})')
+        ani_embed.add_field(name = f'3. {aninews.entries[2].title}', value = f'{aninews.entries[2].description} [continue]({aninews.entries[2].link})')
+        ani_embed.add_field(name = f'4. {aninews.entries[3].title}', value = f'{aninews.entries[3].description} [continue]({aninews.entries[3].link})')
+        ani_embed.add_field(name = f'5. {aninews.entries[4].title}', value = f'{aninews.entries[4].description} [continue]({aninews.entries[4].link})')
+        ani_embed.set_footer(text = f'{verinfo}', icon_url = client.user.avatar_url)
+        ani_embed.set_author(name=f'{message.author} requested:', icon_url=f'{message.author.avatar_url}')
+        ani_embed.set_thumbnail(url = aninews.entries[0]['media_thumbnail'][0]['url'])
+        await message.channel.send(embed = ani_embed)
 
 
 client.run(token)
