@@ -11,6 +11,7 @@ A simple Discord BOT which is still under development.
 - `zeb server roles` : info about every role in the server
 - `zeb avatar <@user>` : view your/someone's profile picture
 - `zeb userinfo <@user>` : view your/someone's userinfo
+- `zeb aninews` : view 5 recent anime news stories
 
 ### INTERNAL FEATURES (till now)
 - logs the messages of joined servers into the 'zebot dev' server. message information contains:
@@ -18,7 +19,7 @@ A simple Discord BOT which is still under development.
   - date and time of messaging
   - attachment url (if any)
   - text content of message
-  - distinguishes bot messages from humans and logs them into separate 'zebot dev' channels
+- distinguishes bot messages from humans and logs them into separate 'zebot dev' channels
 - logs the joining/removal of zebot to/from servers
 - logs DMs sent directly to zebot
 
