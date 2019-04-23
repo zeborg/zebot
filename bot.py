@@ -1,6 +1,6 @@
 '''
 
-zebot v0.3a [Discord BOT by zeborg]
+zebot v0.3b [Discord BOT by zeborg]
 
 GitHub/zeborg  |  Discord: zeborg#4589
 
@@ -13,6 +13,7 @@ import psycopg2
 from os import environ as envar
 from random import randint as die
 from random import randint as clrs
+from random import randint as roul
 from datetime import datetime
 import feedparser
 
@@ -20,9 +21,8 @@ import feedparser
 # BOT TOKEN
 token = envar.get('BOT_TOKEN')
 
-# DATABASE
+# DATABASE SETUP
 dbhost, dbuser, dbpw, dbdb = envar.get('DB_HOST'), envar.get('DB_USER'), envar.get('DB_PW'), envar.get('DB_DB')
-db = psycopg2.connect(host = dbhost, user = dbuser, password = dbpw, database = dbdb)
 
 # CLIENT ACTIVATION
 client = discord.Client()
@@ -30,7 +30,7 @@ client = discord.Client()
 server_start_date = datetime.now().strftime("%x")
 server_start_time = datetime.now().strftime("%X")
 
-verinfo = 'zebot v0.3a' # ZEBOT CURRENT VERSION
+verinfo = 'zebot v0.3b' # ZEBOT CURRENT VERSION
 b_t = 'zeb' # ZEBOT COMMAND TRIGGER
 
 
@@ -43,15 +43,12 @@ async def on_ready():
     for i in range(len(client.guilds)): print(f'{i+1}. {client.guilds[i]} | ID: {client.guilds[i].id} | Owner: {client.guilds[i].owner} | Members: {len(client.guilds[i].members)}')
     print('')
 
-    logging_server = discord.utils.get(client.guilds, name='zebot dev')
-    channel_feed_anime = discord.utils.get(logging_server.text_channels, name='anime-releases')
-
 
 @client.event
 async def on_guild_join(guild):
     ''' LOGGING GUILD CONNECTION '''
 
-    logging_server = discord.utils.get(client.guilds, name='zebot dev')
+    logging_server = discord.utils.get(client.guilds, name = 'zebot dev')
     channel_log_console = discord.utils.get(logging_server.text_channels, name = 'console-logs')
 
     await channel_log_console.send(f'**CONNECTED** : ` {guild.name} ` | **ID** : ` {guild.id} ` | **OWNER** : ` {guild.owner} ` | **MEMBERS** : ` {len(guild.members)} `')
@@ -62,7 +59,7 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     ''' LOGGING GUILD DISCONNECTION '''
 
-    logging_server = discord.utils.get(client.guilds, name='zebot dev')
+    logging_server = discord.utils.get(client.guilds, name = 'zebot dev')
     channel_log_console = discord.utils.get(logging_server.text_channels, name = 'console-logs')
 
     await channel_log_console.send(f'**DISCONNECTED** : ` {guild.name} ` | **ID** : ` {guild.id} ` | **OWNER** : ` {guild.owner} | **MEMBERS** : {len(guild.members)} `')
@@ -74,10 +71,10 @@ async def on_message(message):
     ''' GUILD TEXT MESSAGE RESPONSES '''
 
     # DECLARING LOGGING SERVER AND CHANNELS
-    logging_server = discord.utils.get(client.guilds, name='zebot dev')
-    channel_log_server = discord.utils.get(logging_server.text_channels, name='server-logs')
-    channel_log_server_bots = discord.utils.get(logging_server.text_channels, name='server-bots-logs')
-    channel_log_zebdm = discord.utils.get(logging_server.text_channels, name='zebot-dm-logs')
+    logging_server = discord.utils.get(client.guilds, name = 'zebot dev')
+    channel_log_server = discord.utils.get(logging_server.text_channels, name = 'server-logs')
+    channel_log_server_bots = discord.utils.get(logging_server.text_channels, name = 'server-bots-logs')
+    channel_log_zebdm = discord.utils.get(logging_server.text_channels, name = 'zebot-dm-logs')
 
     def random_colors():
         ''' RANDOM STOCK COLOUR GENERATOR '''
@@ -236,11 +233,86 @@ async def on_message(message):
         aninews = feedparser.parse('https://myanimelist.net/rss/news.xml')
 
         ani_embed = discord.Embed(title = 'Recent Anime News', colour = random_colors(), url = 'https://myanimelist.net/news')
-        for i in range(5): ani_embed.add_field(name = f'{i+1}. {aninews.entries[i].title}', value = f'{aninews.entries[i].description}...[read more]({aninews.entries[i].link})')
+        for i in range(5): ani_embed.add_field(name = f'{i+1}. {aninews.entries[i].title}', value = f'`{aninews.entries[i].published.strip("-0700")} UTC-07:00`\n{aninews.entries[i].description}..[read more]({aninews.entries[i].link})')
         ani_embed.set_footer(text = f'{verinfo}', icon_url = client.user.avatar_url)
         ani_embed.set_author(name=f'{message.author} requested:', icon_url=f'{message.author.avatar_url}')
         ani_embed.set_thumbnail(url = aninews.entries[0]['media_thumbnail'][0]['url'])
         await message.channel.send(embed = ani_embed)
 
+    # ROULETTE ALPHA
+    if message.content.startswith(f'{b_t} roulette'):
+        if message.author.id == 125195763289423872:
+            if message.content.lower() == f'{b_t} roulette help': await message.channel.send('**Format**: `zeb roulette <number in range -14 to 14> <points to bet>`\n\nA number having the same sign as that of the rolled number will award you **5x** points.\nIf your number is same as that of the rolled one, you\'ll be rewarded **50x** points.\nIf you hit a jackpot, i.e. get **0** as the rolled number, you\'re in for a treat with **500x** points!\n\nAnd if you hit none of these, you just lose the points that you bet. *(oof)*')
+            elif message.content.lower() == f'{b_t} roulette stats':
+                db = psycopg2.connect(host=dbhost, user=dbuser, password=dbpw, database=dbdb)
+                cur = db.cursor()
+                cur.execute("select * from zeborg")
+                data_roulette = cur.fetchone()
+                cur.close()
+                db.close()
+                await message.channel.send(f'{message.author.mention}, you\'ve rolled **{data_roulette[0]}** times till now and you have **{data_roulette[1]}** roulette points in the bank.')
+            elif len(message.content.split()) == 4 and int(message.content.split()[2]) in range(-14, 15):
+                user_roll = int(message.content.split()[2])
+                user_bet = int(message.content.split()[3])
+
+                db = psycopg2.connect(host=dbhost, user=dbuser, password=dbpw, database=dbdb)
+                cur = db.cursor()
+                cur.execute("select * from zeborg")
+                data_roulette = cur.fetchone()
+                cur.close()
+                db.close()
+
+                if data_roulette[1] >= user_bet:
+                    computed_roll = roul(-14, 14)
+                    if user_roll == computed_roll:
+                        if user_roll == 0:
+                            # data[1] += 199*user_bet
+                            db = psycopg2.connect(host=dbhost, user=dbuser, password=dbpw, database=dbdb)
+                            cur = db.cursor()
+                            update_roulette = """update zeborg set rolls = %s; update zeborg set points = %s"""
+                            cur.execute(update_roulette, (data_roulette[0] + 1, data_roulette[1] + 199 * user_bet))
+                            db.commit()
+                            cur.close()
+                            db.close()
+                            await message.channel.send(
+                                f'ROULETTE: **{computed_roll}**\nJACKPOT! {message.author.mention} JUST WON **{200 * user_bet}** ROULETTE POINTS!\nYour current roulette points: **{data_roulette[1] + 199 * user_bet}**')
+                        else:
+                            # data[1] += 49*user_bet
+                            db = psycopg2.connect(host=dbhost, user=dbuser, password=dbpw, database=dbdb)
+                            cur = db.cursor()
+                            update_roulette = """update zeborg set rolls = %s; update zeborg set points = %s"""
+                            cur.execute(update_roulette, (data_roulette[0] + 1, data_roulette[1] + 49 * user_bet))
+                            db.commit()
+                            cur.close()
+                            db.close()
+                            await message.channel.send(f'ROULETTE: **{computed_roll}**\n**Bull\'s eye!** {message.author.mention} just won **{50 * user_bet}** points!\nYour current roulette points: **{data_roulette[1] + 49 * user_bet}**')
+                    elif (user_roll < 0 and computed_roll < 0) or (user_roll > 0 and computed_roll > 0):
+                        # data[1] += 4*user_bet
+                        db = psycopg2.connect(host=dbhost, user=dbuser, password=dbpw, database=dbdb)
+                        cur = db.cursor()
+                        update_roulette = """update zeborg set rolls = %s; update zeborg set points = %s"""
+                        cur.execute(update_roulette, (data_roulette[0] + 1, data_roulette[1] + 4 * user_bet))
+                        db.commit()
+                        cur.close()
+                        db.close()
+                        await message.channel.send(
+                            f'ROULETTE: **{computed_roll}**\n\'Grats {message.author.mention}! You just won **{5 * user_bet}** points!\nYour current roulette points: **{data_roulette[1] + 4 * user_bet}**')
+                    else:
+                        # data[1] -= user_bet
+                        db = psycopg2.connect(host=dbhost, user=dbuser, password=dbpw, database=dbdb)
+                        cur = db.cursor()
+                        update_roulette = """update zeborg set rolls = %s; update zeborg set points = %s"""
+                        cur.execute(update_roulette, (data_roulette[0] + 1, data_roulette[1] - user_bet))
+                        db.commit()
+                        cur.close()
+                        db.close()
+                        await message.channel.send(
+                            f'ROULETTE: **{computed_roll}**\nThere\'s nothing for you right now, {message.author.mention}. Better luck next time!\nYour current roulette points: **{data_roulette[1] - user_bet}**')
+                else:
+                    await message.channel.send(f'**Sorry {message.author.mention}! You don\'t have sufficient points to bet {user_bet} points right now.**\nYour current roulette points: **{data_roulette[1]}**')
+
+            else:
+                await message.channel.send('**Invalid input!** Format : `zeb roulette <number in range -14 to 14> <points to bet>`')
+        else: await message.channel.send(f'**Sorry {message.author.mention}! Roulette is currently in the Alpha phase and can only be accessed by zeborg!**')
 
 client.run(token)
