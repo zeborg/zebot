@@ -12,7 +12,7 @@ A simple Discord BOT which is still under development.
 - `zeb avatar <@user>` : view your/someone's profile picture
 - `zeb userinfo <@user>` : view your/someone's userinfo
 - `zeb aninews` : view 5 recent anime news stories
-- `zeb roulette` : still alpha tho, only accessible by me
+- `zeb roulette` : a mini roulette game. `zeb roulette help` gives you the details
 ### INTERNAL FEATURES (till now)
 - logs the messages of joined servers into the 'zebot dev' server. message information contains:
   - name of user, server and channel
